@@ -1,4 +1,4 @@
-.PHONY: default clean run1 run2 runlua
+.PHONY: default lua clean test1 test2 runlua
 
 LUADIR="../../3rd/lua-5.3.6/"
 LUAINC="../../3rd/lua-5.3.6/install/include"
@@ -13,10 +13,10 @@ lua:
 clib.so: clib.c
 	gcc -fPIC -shared -g -o $@ $^ -I $(LUAINC) -L $(LUALIB)
 
-run1: clib.so
+test1: clib.so
 	$(LUABIN) test_co_1.lua
 
-run2: clib.so
+test2: clib.so
 	$(LUABIN) test_co_2.lua
 
 runlua:
