@@ -11,10 +11,14 @@ static int f1(lua_State* L) {
     return 0;
 }
 
+static int f1_v2_continue (lua_State *L, int d1, lua_KContext d2) {
+  printf("leave f1_v2\n");
+  return 0;
+}
+
 static int f1_v2(lua_State* L) {
     printf("enter f1_v2\n");
-    lua_yield(L, 0);
-    printf("leave f1_v2\n");
+    lua_yieldk(L, 0, 0, f1_v2_continue);
     return 0;
 }
 
