@@ -133,6 +133,7 @@ int main( int argc, char* argv[] ) {
         }
 
         lt( events, ret, epollfd, listenfd );
+        //et( events, ret, epollfd, listenfd );
     }
 
     close( listenfd );

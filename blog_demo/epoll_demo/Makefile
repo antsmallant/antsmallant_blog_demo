@@ -2,8 +2,8 @@
 
 build: epoll_server
 
-epoll_server :
-	g++ -o $@ epoll_server.cpp
+epoll_server : epoll_server.cpp
+	g++ -o $@ $+
 
 runserver :
 	chmod +x epoll_server && ./epoll_server 127.0.0.1 9933
