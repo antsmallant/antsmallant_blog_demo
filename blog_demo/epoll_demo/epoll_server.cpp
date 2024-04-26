@@ -1,5 +1,9 @@
 /*
 抄自 游双的《Linux高性能服务器编程》 第9章 I/O 复用
+
+编译：make build
+运行服务端：make runserver
+运行客户端：make runclient
 */
 
 #include <sys/types.h>
