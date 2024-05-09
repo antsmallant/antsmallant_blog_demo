@@ -3,7 +3,7 @@
 build: move_constructor_demo
 
 move_constructor_demo : move_constructor_demo.cpp
-	g++ -o -std=c++14 $@ $+
+	g++ -o $@ $+ -std=c++14 
 
-run :
+run : move_constructor_demo
 	chmod +x move_constructor_demo && ./move_constructor_demo

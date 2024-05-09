@@ -1,3 +1,6 @@
+// move_constructor_demo.cpp
+// 编译&执行：g++ -std=c++14 move_constructor_demo.cpp && ./a.out
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -57,16 +60,14 @@ public:
 };
 
 void test_copy_constructor() {
-    cout << endl << "测试拷贝构造: " << endl;
     A a(10, 100);
-    A b(a); // 触发拷贝构造
+    A b(a);
 }
 
 void test_copy_assign_operator() {
-    cout << endl << "测试拷贝赋值运算符: " << endl;
     A a(10, 100);
     A b;
-    b = a; // 触发拷贝赋值
+    b = a;
 }
 
 A getA(int cnt, int val) {
@@ -74,20 +75,25 @@ A getA(int cnt, int val) {
 }
 
 void test_move_constructor() {
-    cout << endl << "测试移动构造: " << endl;
-    A a(getA(10, 200)); // 触发移动构造？
+    A a(getA(10, 200));
 }
 
 void test_move_assign_operator() {
-    cout << endl << "测试移动赋值运算符: " << endl;
     A a;
-    a = getA(10, 200); // 触发移动赋值
+    a = getA(10, 200);
 }
 
 int main() {
+    cout << endl << "测试拷贝构造: " << endl;
     test_copy_constructor();
+
+    cout << endl << "测试拷贝赋值运算符: " << endl;
     test_copy_assign_operator();
+
+    cout << endl << "测试移动构造: " << endl;
     test_move_constructor();
+
+    cout << endl << "测试移动赋值运算符: " << endl;
     test_move_assign_operator();
 
     return 0;
