@@ -1,5 +1,6 @@
 // move_constructor_demo.cpp
 // 编译&执行：g++ -std=c++14 move_constructor_demo.cpp && ./a.out
+// 屏蔽rvo的编译&执行：g++ -std=c++14 -fno-elide-constructors move_constructor_demo.cpp && ./a.out
 
 #include <iostream>
 #include <vector>
@@ -78,13 +79,18 @@ void test_move_constructor() {
     A a(getA(10, 200));
 }
 
+void test_move_constructor_use_stdmove() {
+    A x(10, 200);
+    A a(std::move(x));
+}
+
 void test_move_assign_operator() {
     A a;
     a = getA(10, 200);
 }
 
 int main() {
-    cout << endl << "测试拷贝构造: " << endl;
+    cout << "测试拷贝构造: " << endl;
     test_copy_constructor();
 
     cout << endl << "测试拷贝赋值运算符: " << endl;
@@ -92,6 +98,9 @@ int main() {
 
     cout << endl << "测试移动构造: " << endl;
     test_move_constructor();
+
+    cout << endl << "使用 std::move 测试移动构造：" << endl;
+    test_move_constructor_use_stdmove();
 
     cout << endl << "测试移动赋值运算符: " << endl;
     test_move_assign_operator();
