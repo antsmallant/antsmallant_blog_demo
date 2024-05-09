@@ -44,14 +44,14 @@ public:
     // 移动构造函数
     A(A&& other) noexcept {
         cout << "A 移动构造函数" << endl;
-        this->p = other.p;  // 直接把 other 的 p 拿来用，省掉了 new 以及数据的复制
-        other.p = nullptr;  // 要把 other 的 p 置空，否则 other 析构的时候会把 p 给 delete 掉
+        this->p = other.p;  // 挪用别人的
+        other.p = nullptr;  // 置空别人的
     }
     // 移动赋值运算符
     A& operator = (A&& other) noexcept {
         cout << "A 移动赋值运算符" << endl;
-        this->p = other.p;  // 直接把 other 的 p 拿来用，省掉了 new 以及数据的复制
-        other.p = nullptr;  // 要把 other 的 p 置空，否则 other 析构的时候会把 p 给 delete 掉       
+        this->p = other.p; 
+        other.p = nullptr;  
         return *this;
     }
 };

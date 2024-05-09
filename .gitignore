@@ -51,6 +51,9 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# compile output
+a.out
+
 # 3rd/lua-5.3.6
 3rd/lua-5.3.6/src/lua
 3rd/lua-5.3.6/src/luac
@@ -60,3 +63,7 @@ dkms.conf
 # blog_demo
 blog_demo/epoll_demo/epoll_server
 blog_demo/epoll_httpserver_demo/epoll_http_server
+
+# modern-cpp
+blog_demo/modern-cpp/move_constructor_demo
+blog_demo/modern-cpp/a.out
