@@ -18,7 +18,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/epoll.h>
-#include <pthread.h>
+#include <thread>
+#include <chrono> 
 
 #define MAX_EVENT_NUMBER 1024
 #define BUFFER_SIZE 10
@@ -38,11 +39,26 @@ void addfd( int epollfd, int fd, bool enable_et ) {
         event.events |= EPOLLET;
     }
     epoll_ctl( epollfd, EPOLL_CTL_ADD, fd, &event );
-    setnonblocking( fd );
 }
 
 void removefd( int epollfd, int fd) {
     epoll_ctl( epollfd, EPOLL_CTL_DEL, fd, NULL );
+}
+
+void thread_read(int epollfd, int sockfd) {
+    char buf[ BUFFER_SIZE ];
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        memset( buf, '\0', BUFFER_SIZE );
+        int ret = recv( sockfd, buf, BUFFER_SIZE-1, 0 );
+        if ( ret <= 0 ) {
+            close( sockfd );
+            removefd( epollfd, sockfd );
+            printf( "in thread, sockfd %d, read nothing. close socket\n", sockfd);
+            break;
+        }
+        printf( "in thread, sockfd %d, get %d bytes, content: %s", sockfd, ret, buf);
+    }
 }
 
 void lt( epoll_event* events, int number, int epollfd, int listenfd ) {
@@ -54,53 +70,13 @@ void lt( epoll_event* events, int number, int epollfd, int listenfd ) {
             socklen_t client_addrlength = sizeof( client_address );
             int connfd = accept( listenfd, ( struct sockaddr* )&client_address,
                                 &client_addrlength );
+            printf("epoll accept, connfd: %d\n", connfd);                                
             addfd( epollfd, connfd, false );
+            new std::thread(thread_read, epollfd, connfd);
         } else if ( events[i].events & EPOLLIN ) {
-            printf( "event trigger once\n" );
-            memset( buf, '\0', BUFFER_SIZE );
-            int ret = recv( sockfd, buf, BUFFER_SIZE-1, 0 );
-            if ( ret <= 0 ) {
-                close( sockfd );
-                removefd( epollfd, sockfd );
-                continue;
-            }
-            printf( "get %d bytes of content: %s\n", ret, buf);
+            printf( "epoll read event trigger, sockfd: %d\n", sockfd );
         } else {
-            printf( "something else happened\n" );
-        }
-    }
-}
-
-void et( epoll_event* events, int number, int epollfd, int listenfd ) {
-    char buf[ BUFFER_SIZE ];
-    for (int i = 0; i < number; ++i ) {
-        int sockfd = events[i].data.fd;
-        if ( sockfd == listenfd ) {
-            struct sockaddr_in client_address;
-            socklen_t client_addrlength = sizeof( client_address );
-            int connfd = accept( listenfd, ( struct sockaddr* )&client_address,
-                                &client_addrlength);
-            addfd( epollfd, connfd, true );
-        } else if ( events[i].events & EPOLLIN ) {
-            printf( "event trigger once\n");
-            while( 1 ) {
-                memset( buf, '\0', BUFFER_SIZE );
-                int ret = recv( sockfd, buf, BUFFER_SIZE-1, 0 );
-                if( ret < 0 ) {
-                    if ( ( errno == EAGAIN ) || ( errno == EWOULDBLOCK ) ) {
-                        printf( "read later\n" );
-                        break;
-                    }
-                    close( sockfd );
-                    break;
-                } else if ( ret == 0 ) {
-                    close( sockfd );
-                } else {
-                    printf( "get %d bytes of content: %s\n", ret, buf );
-                }
-            }
-        } else {
-            printf( "something else happened\n");
+            printf( "epoll something else happened\n" );
         }
     }
 }
@@ -136,6 +112,7 @@ int main( int argc, char* argv[] ) {
     int epollfd = epoll_create ( 5 );
     assert( epollfd != -1 );
     addfd( epollfd, listenfd, true );
+    setnonblocking( listenfd );
 
     printf("start epoll_wait now ...\n");
 
@@ -147,7 +124,6 @@ int main( int argc, char* argv[] ) {
         }
 
         lt( events, ret, epollfd, listenfd );
-        //et( events, ret, epollfd, listenfd );
     }
 
     close( listenfd );
