@@ -1,12 +1,12 @@
 .PHONY: build runserver runclient
 
-build: epoll_server
+build: a.out
 
-epoll_server : epoll_server.cpp
+a.out : epoll_server.cpp
 	g++ -o $@ $+
 
 runserver : build
-	chmod +x epoll_server && ./epoll_server 127.0.0.1 9934
+	chmod +x a.out && ./a.out 127.0.0.1 9934
 
 runclient : build
 	nc 127.0.0.1 9934

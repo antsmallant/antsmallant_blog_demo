@@ -63,7 +63,6 @@ a.out
 # blog_demo
 blog_demo/epoll_demo/epoll_server
 blog_demo/epoll_httpserver_demo/epoll_http_server
-
-# modern-cpp
+blog_demo/epoll_blocking_demo/epoll_blocking_demo
 blog_demo/modern-cpp/move_constructor_demo
 blog_demo/modern-cpp/a.out
