@@ -5,9 +5,9 @@ build: epoll_server
 epoll_server : epoll_server.cpp
 	g++ -o $@ $+
 
-runserver :
+runserver : build
 	chmod +x epoll_server && ./epoll_server 127.0.0.1 9933
 
-runclient :
+runclient : build
 	nc 127.0.0.1 9933
 

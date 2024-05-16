@@ -129,6 +129,8 @@ int main( int argc, char* argv[] ) {
     assert( epollfd != -1 );
     addfd( epollfd, listenfd, true );
 
+    printf("start epoll_wait now ...\n");
+
     while( 1 ) {
         int ret = epoll_wait( epollfd, events, MAX_EVENT_NUMBER, -1 );
         if ( ret < 0 ) {
