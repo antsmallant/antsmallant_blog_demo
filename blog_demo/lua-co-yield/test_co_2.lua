@@ -2,7 +2,7 @@ local co = require "coroutine"
 local clib = require "clib"
 
 local co2 = co.create(function()
-    clib.f1()
+    clib.f2()
 end)
 
 -- 第一次 resume
