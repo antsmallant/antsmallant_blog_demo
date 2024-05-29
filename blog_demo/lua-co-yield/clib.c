@@ -28,10 +28,19 @@ static int f2(lua_State* L) {
     return 0;
 }
 
+static int f3(lua_State* L) {
+    printf("enter f3\n");
+    lua_getglobal(L, "lua_func_for_c");
+    lua_call(L, 0, 0); // 调用 lua 脚本里定义的 lua 函数： lua_func_for_c
+    printf("leave f3\n");
+    return 0;
+}
+
 LUAMOD_API int luaopen_clib(lua_State* L) {
     luaL_Reg funcs[] = {
         {"f1", f1},
         {"f2", f2},
+        {"f3", f3},
         {NULL, NULL}
     };
     luaL_newlib(L, funcs);

@@ -21,6 +21,9 @@ test1: clib
 test2: clib
 	@$(LUABIN) test_co_2.lua
 
+test3: clib
+	@$(LUABIN) test_co_3.lua
+
 runlua:
 	@$(LUABIN)
 
